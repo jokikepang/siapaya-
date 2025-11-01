@@ -1,0 +1,440 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil Calibri;}{\f2\fnil\fcharset1 Cambria Math;}{\f3\fnil\fcharset0 Cambria Math;}{\f4\fnil\fcharset1 Segoe UI Symbol;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Riched20 10.0.19041}{\*\mmathPr\mmathFont2\mwrapIndent1440 }\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 Tentu \f1\emdash  berikut terjemahan bagian teks tersebut ke dalam **Bahasa Indonesia** dengan mempertahankan konteks teknis Django:\par
+\par
+---\par
+\par
+### Jalur root lainnya, dan aplikasi tetap akan berfungsi\par
+\par
+\f0\'ae **Kapan menggunakan `include()`**\par
+Kamu **selalu harus menggunakan** fungsi `include()` ketika menyertakan pola URL lain.\par
+Satu-satunya pengecualian adalah `admin.site.urls`, yaitu *URLconf* bawaan Django yang disediakan untuk situs admin default.\par
+\par
+Sekarang kamu telah menghubungkan *view* `index` ke dalam *URLconf*.\par
+Verifikasikan bahwa semuanya berfungsi dengan perintah berikut:\par
+\par
+```bash\par
+$ python manage.py runserver\par
+```\par
+\par
+Buka alamat berikut di browser:\par
+[{{\field{\*\fldinst{HYPERLINK http://localhost:8000/polls/](http://localhost:8000/polls/) }}{\fldrslt{http://localhost:8000/polls/](http://localhost:8000/polls/)\ul0\cf0}}}}\f0\fs22\par
+\par
+Kamu seharusnya melihat teks:\par
+\par
+> \ldblquote Hello, world. You\rquote re at the polls index.\rdblquote\par
+\par
+yang kamu definisikan di *view* `index`.\par
+\par
+\'ae **Halaman tidak ditemukan?**\par
+Jika kamu mendapatkan pesan *error page*, pastikan kamu membuka **[http://localhost:8000/polls/](http://localhost:8000/polls/)**\par
+dan bukan **[http://localhost:8000/](http://localhost:8000/)** saja.\par
+\par
+Setelah kamu memahami alur dasar *request* dan *response*, lanjutkan ke **Bagian 2** dari tutorial ini untuk mulai bekerja dengan basis data.\par
+\par
+---\par
+\par
+## 2.4 Menulis Aplikasi Django Pertamamu, Bagian 2\par
+\par
+Tutorial ini dimulai dari titik di mana **Tutorial 1** berakhir.\par
+Kita akan menyiapkan basis data, membuat *model* pertamamu, dan mendapatkan pengenalan cepat terhadap situs admin otomatis Django.\par
+\par
+\'ae **Tempat untuk mencari bantuan**\par
+Jika kamu mengalami kesulitan dalam mengikuti tutorial ini, silakan buka bagian **Getting Help** di halaman FAQ.\par
+\par
+---\par
+\par
+### 2.4.1 Menyiapkan Basis Data\par
+\par
+Sekarang, buka file **mysite/settings.py**.\par
+Itu adalah modul Python biasa yang berisi variabel-variabel tingkat modul yang mewakili pengaturan Django.\par
+\par
+Secara default, konfigurasi `DATABASES` menggunakan **SQLite**.\par
+Jika kamu baru dalam hal basis data, atau hanya ingin mencoba Django, ini adalah pilihan termudah.\par
+SQLite sudah termasuk di dalam Python, jadi kamu **tidak perlu menginstal apa pun** untuk mendukung basis data.\par
+\par
+Namun, jika kamu ingin memulai proyek nyata, sebaiknya gunakan basis data yang lebih **skalabel** seperti **PostgreSQL**, agar kamu tidak perlu repot berpindah basis data di kemudian hari.\par
+\par
+Jika kamu ingin menggunakan basis data lain, lihat detail cara menyesuaikannya agar basis datamu dapat berjalan dengan benar.\par
+\par
+---\par
+\par
+Saat kamu sedang mengedit `mysite/settings.py`, atur variabel `TIME_ZONE` ke zona waktu kamu.\par
+\par
+Perhatikan juga pengaturan `INSTALLED_APPS` di bagian atas file.\par
+Bagian ini berisi nama semua aplikasi Django yang **aktif** dalam instance Django tersebut.\par
+Aplikasi-aplikasi ini dapat digunakan di beberapa proyek, dan kamu dapat memaketkan serta mendistribusikannya agar digunakan oleh orang lain dalam proyek mereka.\par
+\par
+Secara default, `INSTALLED_APPS` berisi aplikasi-aplikasi berikut, yang semuanya sudah disertakan dengan Django:\par
+\par
+* `django.contrib.admin` \f1\endash  Situs admin (akan kamu gunakan sebentar lagi).\par
+* `django.contrib.auth` \endash  Sistem autentikasi.\par
+* `django.contrib.contenttypes` \endash  Kerangka kerja tipe konten.\par
+* `django.contrib.sessions` \endash  Kerangka kerja sesi.\par
+* `django.contrib.messages` \endash  Kerangka kerja pesan.\par
+* `django.contrib.staticfiles` \endash  Kerangka kerja untuk mengelola berkas statis.\par
+\par
+Aplikasi-aplikasi ini disertakan secara default demi kemudahan dalam kasus umum.\par
+\par
+Beberapa aplikasi tersebut menggunakan satu atau lebih tabel basis data.\par
+Jadi, kita perlu **membuat tabel-tabel** tersebut di basis data sebelum dapat menggunakannya.\par
+\par
+Jalankan perintah berikut:\par
+\par
+```bash\par
+$ python manage.py migrate\par
+```\par
+\par
+Perintah `migrate` akan memeriksa pengaturan `INSTALLED_APPS` dan membuat tabel basis data yang diperlukan berdasarkan pengaturan di `mysite/settings.py` dan migrasi yang dikirim bersama aplikasi tersebut (akan kita bahas nanti).\par
+\par
+Kamu akan melihat pesan untuk setiap migrasi yang diterapkan.\par
+\par
+Jika kamu tertarik, buka klien basis data melalui command line dan ketik perintah berikut untuk melihat tabel yang dibuat Django:\par
+\par
+* PostgreSQL \f2\u8594?\f0  `\\dt`\par
+* MariaDB/MySQL \f2\u8594?\f0  `SHOW TABLES;`\par
+* SQLite \f2\u8594?\f0  `.tables`\par
+* Oracle \f2\u8594?\f0  `SELECT TABLE_NAME FROM USER_TABLES;`\par
+\par
+---\par
+\par
+\'ae **Untuk para minimalis**\par
+\par
+Seperti disebutkan di atas, aplikasi bawaan tersebut disertakan untuk kasus umum, tapi tidak semua orang membutuhkannya.\par
+Jika kamu tidak memerlukan sebagian atau seluruhnya, silakan *comment out* atau hapus baris yang sesuai dari `INSTALLED_APPS` **sebelum menjalankan** `migrate`.\par
+\par
+Perintah `migrate` hanya akan menjalankan migrasi untuk aplikasi yang ada di dalam `INSTALLED_APPS`.\par
+\par
+---\par
+\par
+### 2.4.2 Membuat Model\par
+\par
+Sekarang kita akan mendefinisikan *model* \f1\emdash  pada dasarnya, tata letak basis data kamu, beserta metadata tambahannya.\par
+\par
+\f0\'ae **Filosofi**\par
+\par
+Sebuah *model* adalah **sumber tunggal dan definitif** dari informasi tentang data kamu.\par
+Model berisi bidang-bidang penting (*fields*) dan perilaku dari data yang kamu simpan.\par
+\par
+Django mengikuti prinsip **DRY (Don\rquote t Repeat Yourself)**.\par
+Tujuannya adalah untuk **mendefinisikan data hanya sekali**, lalu Django akan menggunakannya di berbagai tempat secara otomatis.\par
+\par
+---\par
+\par
+Apakah kamu ingin saya lanjutkan menerjemahkan bagian **selanjutnya dari \ldblquote Creating models\rdblquote ** juga?\par
+Baik\f3 ! \f0 Berikut\f3  \f0 **terjemahan\f3  \f0 lengkap\f3  \f0 ke\f3  \f0 Bahasa\f3  \f0 Indonesia**\f3  \f0 dari\f3  \f0 bagian\f3  \f0 yang\f3  \f0 kamu\f3  \f0 berikan\f3  (\f0 lanjutan\f3  \f0 dari\f3  \f0 bagian\f3  \f0 sebelumnya\f3  \f0 dalam\f3  \f0 tutorial\f3  \f0 Django\f3 ):\f0\par
+\par
+\f3 ---\f0\par
+\par
+\f3 ### \f0 Model\f3  \f0 di\f3  \f0 satu\f3  \f0 tempat\f3  \f0 dan\f3  \f0 Django\f3  \f0 otomatis\f3  \f0 menurunkan\f3  \f0 informasi\f3  \f0 darinya\par
+\par
+Termasuk\f3  \f0 juga\f3  \f0 *migrations*\f3  \f2\emdash\f3  \f0 tidak\f3  \f0 seperti\f3  \f0 di\f3  \f0 Ruby\f3  \f0 on\f3  \f0 Rails\f3 , \f0 misalnya\f3  \f2\emdash\f3  \f0 *migrations*\f3  \f0 di\f3  \f0 Django\f3  \f0 sepenuhnya\f3  \f0 **diturunkan\f3  \f0 dari\f3  \f0 berkas\f3  \f0 model**\f3 , \f0 dan\f3  \f0 pada\f3  \f0 dasarnya\f3  \f0 merupakan\f3  \f0 **sejarah\f3  \f0 perubahan**\f3  \f0 yang\f3  \f0 dapat\f3  \f0 dijalankan\f3  \f0 Django\f3  \f0 untuk\f3  \f0 memperbarui\f3  \f0 *schema*\f3  \f0 basis\f3  \f0 data\f3  \f0 agar\f3  \f0 sesuai\f3  \f0 dengan\f3  \f0 model\f3  \f0 terkini\f3 .\f0\par
+\par
+Dalam\f3  \f0 aplikasi\f3  \f0 **polls**\f3 , \f0 kita\f3  \f0 akan\f3  \f0 membuat\f3  \f0 dua\f3  \f0 *model*\f3 : \f0 `Question`\f3  \f0 dan\f3  \f0 `Choice`\f3 .\f0\par
+\par
+*\f3  \f0 `Question`\f3  \f0 memiliki\f3  \f0 teks\f3  \f0 pertanyaan\f3  \f0 dan\f3  \f0 tanggal\f3  \f0 publikasi\f3 .\f0\par
+*\f3  \f0 `Choice`\f3  \f0 memiliki\f3  \f0 dua\f3  \f0 bidang\f3 : \f0 teks\f3  \f0 pilihan\f3  \f0 dan\f3  \f0 jumlah\f3  \f0 suara\f3  (\f0 *vote\f3  \f0 tally*\f3 ).\f0\par
+\f3   \f0 Setiap\f3  \f0 `Choice`\f3  \f0 terhubung\f3  \f0 dengan\f3  \f0 satu\f3  \f0 `Question`\f3 .\f0\par
+\par
+Konsep\f3  \f0 ini\f3  \f0 direpresentasikan\f3  \f0 oleh\f3  \f0 kelas\f3  \f0 Python\f3 .\f0\par
+Edit\f3  \f0 berkas\f3  \f0 `polls\f3 /\f0 models\f3 .\f0 py`\f3  \f0 agar\f3  \f0 terlihat\f3  \f0 seperti\f3  \f0 ini\f3 :\f0\par
+\par
+```python\par
+from\f3  \f0 django\f3 .\f0 db\f3  \f0 import\f3  \f0 models\par
+\par
+class\f3  \f0 Question\f3 (\f0 models\f3 .\f0 Model\f3 ):\f0\par
+\f3     \f0 question\f3 _\f0 text\f3  = \f0 models\f3 .\f0 CharField\f3 (\f0 max\f3 _\f0 length\f3 =\f0 200\f3 )\f0\par
+\f3     \f0 pub\f3 _\f0 date\f3  = \f0 models\f3 .\f0 DateTimeField\f3 (\f0 "date\f3  \f0 published"\f3 )\f0\par
+\par
+class\f3  \f0 Choice\f3 (\f0 models\f3 .\f0 Model\f3 ):\f0\par
+\f3     \f0 question\f3  = \f0 models\f3 .\f0 ForeignKey\f3 (\f0 Question\f3 , \f0 on\f3 _\f0 delete\f3 =\f0 models\f3 .\f0 CASCADE\f3 )\f0\par
+\f3     \f0 choice\f3 _\f0 text\f3  = \f0 models\f3 .\f0 CharField\f3 (\f0 max\f3 _\f0 length\f3 =\f0 200\f3 )\f0\par
+\f3     \f0 votes\f3  = \f0 models\f3 .\f0 IntegerField\f3 (\f0 default\f3 =\f0 0\f3 )\f0\par
+```\par
+\par
+Di\f3  \f0 sini\f3 , \f0 setiap\f3  \f0 model\f3  \f0 direpresentasikan\f3  \f0 oleh\f3  \f0 kelas\f3  \f0 yang\f3  \f0 menurunkan\f3  (\f0 `subclass`\f3 ) \f0 `django\f3 .\f0 db\f3 .\f0 models\f3 .\f0 Model`\f3 .\f0\par
+Setiap\f3  \f0 model\f3  \f0 memiliki\f3  \f0 sejumlah\f3  \f0 variabel\f3  \f0 kelas\f3 , \f0 masing\f3 -\f0 masing\f3  \f0 mewakili\f3  \f0 satu\f3  \f0 kolom\f3  (\f0 *field*\f3 ) \f0 di\f3  \f0 basis\f3  \f0 data\f3 .\f0\par
+\par
+Setiap\f3  \f0 *field*\f3  \f0 direpresentasikan\f3  \f0 oleh\f3  \f0 sebuah\f3  \f0 instance\f3  \f0 dari\f3  \f0 kelas\f3  \f0 *Field*\f3  \f2\emdash\f3  \f0 misalnya\f3 :\f0\par
+\par
+*\f3  \f0 `CharField`\f3  \f0 untuk\f3  \f0 teks\f3 ,\f0\par
+*\f3  \f0 `DateTimeField`\f3  \f0 untuk\f3  \f0 tanggal\f3  \f0 dan\f3  \f0 waktu\f3 .\f0\par
+\par
+Ini\f3  \f0 memberi\f3  \f0 tahu\f3  \f0 Django\f3  \f0 tipe\f3  \f0 data\f3  \f0 apa\f3  \f0 yang\f3  \f0 disimpan\f3  \f0 oleh\f3  \f0 masing\f3 -\f0 masing\f3  \f0 *field*\f3 .\f0\par
+\par
+Nama\f3  \f0 dari\f3  \f0 setiap\f3  \f0 *Field\f3  \f0 instance*\f3  (\f0 misalnya\f3  \f0 `question\f3 _\f0 text`\f3  \f0 atau\f3  \f0 `pub\f3 _\f0 date`\f3 ) \f0 digunakan\f3  \f0 sebagai\f3  \f0 **nama\f3  \f0 kolom\f3  \f0 di\f3  \f0 basis\f3  \f0 data**\f3 , \f0 dan\f3  \f0 juga\f3  \f0 akan\f3  \f0 kamu\f3  \f0 gunakan\f3  \f0 di\f3  \f0 kode\f3  \f0 Python\f3 .\f0\par
+\par
+Kamu\f3  \f0 juga\f3  \f0 bisa\f3  \f0 memberikan\f3  \f0 *argumen\f3  \f0 pertama\f3  \f0 opsional*\f3  \f0 berupa\f3  \f0 nama\f3  \f0 yang\f3  \f0 bisa\f3  \f0 dibaca\f3  \f0 manusia\f3  (\f0 *human\f3 -\f0 readable\f3  \f0 name*\f3 ).\f0\par
+Jika\f3  \f0 tidak\f3  \f0 diberikan\f3 , \f0 Django\f3  \f0 akan\f3  \f0 menggunakan\f3  \f0 nama\f3  \f0 mesin\f3  (\f0 misalnya\f3  \f0 `question\f3 _\f0 text`\f3 ) \f0 secara\f3  \f0 otomatis\f3 .\f0\par
+\par
+Dalam\f3  \f0 contoh\f3  \f0 ini\f3 , \f0 kita\f3  \f0 hanya\f3  \f0 memberi\f3  \f0 nama\f3  \f0 manusia\f3  \f0 untuk\f3  \f0 `Question\f3 .\f0 pub\f3 _\f0 date`\f3 .\f0\par
+Field\f3  \f0 lainnya\f3  \f0 akan\f3  \f0 menggunakan\f3  \f0 nama\f3  \f0 mesinnya\f3  \f0 sebagai\f3  \f0 nama\f3  \f0 tampilan\f3 .\f0\par
+\par
+Beberapa\f3  \f0 *Field\f3  \f0 class*\f3  \f0 memiliki\f3  \f0 argumen\f3  \f0 wajib\f3  \f2\emdash\f3  \f0 misalnya\f3 , \f0 `CharField`\f3  \f0 **harus**\f3  \f0 memiliki\f3  \f0 `max\f3 _\f0 length`\f3 .\f0\par
+Nilai\f3  \f0 ini\f3  \f0 digunakan\f3  \f0 untuk\f3  \f0 *schema*\f3  \f0 basis\f3  \f0 data\f3  \f0 **dan**\f3  \f0 untuk\f3  \f0 validasi\f3 .\f0\par
+\par
+Field\f3  \f0 juga\f3  \f0 bisa\f3  \f0 memiliki\f3  \f0 argumen\f3  \f0 opsional\f3 , \f0 seperti\f3  \f0 `default\f3 =\f0 0`\f3  \f0 pada\f3  \f0 `votes`\f3 .\f0\par
+\par
+Terakhir\f3 , \f0 perhatikan\f3  \f0 bahwa\f3  \f0 kita\f3  \f0 membuat\f3  \f0 hubungan\f3  \f0 menggunakan\f3  \f0 `ForeignKey`\f3 .\f0\par
+Ini\f3  \f0 memberi\f3  \f0 tahu\f3  \f0 Django\f3  \f0 bahwa\f3  \f0 setiap\f3  \f0 `Choice`\f3  \f0 **berelasi\f3  \f0 dengan\f3  \f0 satu\f3  \f0 `Question`**\f3 .\f0\par
+Django\f3  \f0 mendukung\f3  \f0 semua\f3  \f0 jenis\f3  \f0 relasi\f3  \f0 umum\f3  \f0 di\f3  \f0 basis\f3  \f0 data\f3 :\f0\par
+*many\f3 -\f0 to\f3 -\f0 one*\f3 , \f0 *many\f3 -\f0 to\f3 -\f0 many*\f3 , \f0 dan\f3  \f0 *one\f3 -\f0 to\f3 -\f0 one*\f3 .\f0\par
+\par
+\f3 ---\f0\par
+\par
+\f3 ### \f0 2\f3 .\f0 4\f3 .\f0 3\f3  \f0 Mengaktifkan\f3  \f0 Model\par
+\par
+Sedikit\f3  \f0 kode\f3  \f0 model\f3  \f0 itu\f3  \f0 sudah\f3  \f0 memberi\f3  \f0 Django\f3  \f0 banyak\f3  \f0 informasi\f3 .\f0\par
+Dengan\f3  \f0 itu\f3 , \f0 Django\f3  \f0 dapat\f3 :\f0\par
+\par
+*\f3  \f0 Membuat\f3  \f0 *schema*\f3  \f0 basis\f3  \f0 data\f3  (\f0 perintah\f3  \f0 `CREATE\f3  \f0 TABLE`\f3  \f0 untuk\f3  \f0 aplikasi\f3  \f0 ini\f3 ).\f0\par
+*\f3  \f0 Membuat\f3  \f0 API\f3  \f0 Python\f3  \f0 untuk\f3  \f0 mengakses\f3  \f0 objek\f3  \f0 `Question`\f3  \f0 dan\f3  \f0 `Choice`\f3 .\f0\par
+\par
+Namun\f3 , \f0 pertama\f3 -\f0 tama\f3  \f0 kita\f3  \f0 perlu\f3  \f0 memberi\f3  \f0 tahu\f3  \f0 proyek\f3  \f0 kita\f3  \f0 bahwa\f3  \f0 aplikasi\f3  \f0 **polls**\f3  \f0 sudah\f3  \f0 terpasang\f3 .\f0\par
+\par
+\'ae\f3  \f0 **Filosofi**\par
+Aplikasi\f3  \f0 Django\f3  \f0 bersifat\f3  \f0 **\ldblquote pluggable\rdblquote **\f3  \f2\emdash\f3  \f0 kamu\f3  \f0 dapat\f3  \f0 menggunakan\f3  \f0 satu\f3  \f0 aplikasi\f3  \f0 di\f3  \f0 banyak\f3  \f0 proyek\f3  \f0 dan\f3  \f0 mendistribusikannya\f3 , \f0 karena\f3  \f0 aplikasi\f3  \f0 tersebut\f3  \f0 **tidak\f3  \f0 harus\f3  \f0 terikat**\f3  \f0 pada\f3  \f0 instalasi\f3  \f0 Django\f3  \f0 tertentu\f3 .\f0\par
+\par
+Untuk\f3  \f0 menambahkan\f3  \f0 aplikasi\f3  \f0 ke\f3  \f0 proyek\f3 , \f0 kita\f3  \f0 menambahkan\f3  \f0 referensi\f3  \f0 ke\f3  \f0 kelas\f3  \f0 konfigurasinya\f3  \f0 dalam\f3  \f0 pengaturan\f3  \f0 `INSTALLED\f3 _\f0 APPS`\f3 .\f0\par
+Kelas\f3  \f0 konfigurasi\f3  \f0 `PollsConfig`\f3  \f0 berada\f3  \f0 di\f3  \f0 `polls\f3 /\f0 apps\f3 .\f0 py`\f3 , \f0 jadi\f3  \f0 jalurnya\f3  \f0 adalah\f3  \f0 `'polls\f3 .\f0 apps\f3 .\f0 PollsConfig'`\f3 .\f0\par
+\par
+Edit\f3  \f0 `mysite\f3 /\f0 settings\f3 .\f0 py`\f3  \f0 dan\f3  \f0 tambahkan\f3  \f0 jalur\f3  \f0 tersebut\f3  \f0 ke\f3  \f0 `INSTALLED\f3 _\f0 APPS`\f3 , \f0 seperti\f3  \f0 ini\f3 :\f0\par
+\par
+```python\par
+INSTALLED\f3 _\f0 APPS\f3  = [\f0\par
+\f3     \f0 "polls\f3 .\f0 apps\f3 .\f0 PollsConfig"\f3 ,\f0\par
+\f3     \f0 "django\f3 .\f0 contrib\f3 .\f0 admin"\f3 ,\f0\par
+\f3     \f0 "django\f3 .\f0 contrib\f3 .\f0 auth"\f3 ,\f0\par
+\f3     \f0 "django\f3 .\f0 contrib\f3 .\f0 contenttypes"\f3 ,\f0\par
+\f3     \f0 "django\f3 .\f0 contrib\f3 .\f0 sessions"\f3 ,\f0\par
+\f3     \f0 "django\f3 .\f0 contrib\f3 .\f0 messages"\f3 ,\f0\par
+\f3     \f0 "django\f3 .\f0 contrib\f3 .\f0 staticfiles"\f3 ,\f0\par
+\f3 ]\f0\par
+```\par
+\par
+Sekarang\f3  \f0 Django\f3  \f0 tahu\f3  \f0 bahwa\f3  \f0 aplikasi\f3  \f0 `polls`\f3  \f0 harus\f3  \f0 dimasukkan\f3 .\f0\par
+Jalankan\f3  \f0 perintah\f3  \f0 berikut\f3 :\f0\par
+\par
+```bash\par
+$\f3  \f0 python\f3  \f0 manage\f3 .\f0 py\f3  \f0 makemigrations\f3  \f0 polls\par
+```\par
+\par
+Kamu\f3  \f0 akan\f3  \f0 melihat\f3  \f0 sesuatu\f3  \f0 seperti\f3  \f0 ini\f3 :\f0\par
+\par
+```\par
+Migrations\f3  \f0 for\f3  \f0 'polls'\f3 :\f0\par
+\f3   \f0 polls\f3 /\f0 migrations\f3 /\f0 0001\f3 _\f0 initial\f3 .\f0 py\par
+\f3     - \f0 Create\f3  \f0 model\f3  \f0 Question\par
+\f3     - \f0 Create\f3  \f0 model\f3  \f0 Choice\par
+```\par
+\par
+Dengan\f3  \f0 menjalankan\f3  \f0 `makemigrations`\f3 , \f0 kamu\f3  \f0 memberi\f3  \f0 tahu\f3  \f0 Django\f3  \f0 bahwa\f3  \f0 kamu\f3  \f0 telah\f3  \f0 membuat\f3  \f0 perubahan\f3  \f0 pada\f3  \f0 model\f3  (\f0 dalam\f3  \f0 hal\f3  \f0 ini\f3 , \f0 membuat\f3  \f0 model\f3  \f0 baru\f3 ) \f0 dan\f3  \f0 ingin\f3  \f0 menyimpannya\f3  \f0 sebagai\f3  \f0 *migration*\f3 .\f0\par
+\par
+*Migrations*\f3  \f0 adalah\f3  \f0 cara\f3  \f0 Django\f3  \f0 menyimpan\f3  \f0 perubahan\f3  \f0 pada\f3  \f0 model\f3  \f0 dan\f3  \f0 *schema*\f3  \f0 basis\f3  \f0 data\f3  \f2\emdash\f3  \f0 disimpan\f3  \f0 sebagai\f3  \f0 berkas\f3  \f0 di\f3  \f0 disk\f3  (\f0 misalnya\f3  \f0 `polls\f3 /\f0 migrations\f3 /\f0 0001\f3 _\f0 initial\f3 .\f0 py`\f3 ).\f0\par
+Berkas\f3  \f0 ini\f3  \f0 bisa\f3  \f0 kamu\f3  \f0 baca\f3 , \f0 dan\f3  \f0 bahkan\f3  \f0 edit\f3  \f0 jika\f3  \f0 diperlukan\f3 .\f0\par
+\par
+Kamu\f3  \f0 dapat\f3  \f0 melihat\f3  \f0 SQL\f3  \f0 yang\f3  \f0 akan\f3  \f0 dijalankan\f3  \f0 oleh\f3  \f0 migration\f3  \f0 dengan\f3  \f0 perintah\f3 :\f0\par
+\par
+```bash\par
+$\f3  \f0 python\f3  \f0 manage\f3 .\f0 py\f3  \f0 sqlmigrate\f3  \f0 polls\f3  \f0 0001\par
+```\par
+\par
+Contoh\f3  \f0 hasilnya\f3  (\f0 diformat\f3  \f0 agar\f3  \f0 lebih\f3  \f0 mudah\f3  \f0 dibaca\f3 ):\f0\par
+\par
+```sql\par
+BEGIN\f3 ;\f0\par
+CREATE\f3  \f0 TABLE\f3  \f0 "polls\f3 _\f0 question"\f3  (\f0\par
+\f3     \f0 "id"\f3  \f0 bigint\f3  \f0 NOT\f3  \f0 NULL\f3  \f0 PRIMARY\f3  \f0 KEY\f3  \f0 GENERATED\f3  \f0 BY\f3  \f0 DEFAULT\f3  \f0 AS\f3  \f0 IDENTITY\f3 ,\f0\par
+\f3     \f0 "question\f3 _\f0 text"\f3  \f0 varchar\f3 (\f0 200\f3 ) \f0 NOT\f3  \f0 NULL\f3 ,\f0\par
+\f3     \f0 "pub\f3 _\f0 date"\f3  \f0 timestamp\f3  \f0 with\f3  \f0 time\f3  \f0 zone\f3  \f0 NOT\f3  \f0 NULL\par
+\f3 );\f0\par
+CREATE\f3  \f0 TABLE\f3  \f0 "polls\f3 _\f0 choice"\f3  (\f0\par
+\f3     \f0 "id"\f3  \f0 bigint\f3  \f0 NOT\f3  \f0 NULL\f3  \f0 PRIMARY\f3  \f0 KEY\f3  \f0 GENERATED\f3  \f0 BY\f3  \f0 DEFAULT\f3  \f0 AS\f3  \f0 IDENTITY\f3 ,\f0\par
+\f3     \f0 "choice\f3 _\f0 text"\f3  \f0 varchar\f3 (\f0 200\f3 ) \f0 NOT\f3  \f0 NULL\f3 ,\f0\par
+\f3     \f0 "votes"\f3  \f0 integer\f3  \f0 NOT\f3  \f0 NULL\f3 ,\f0\par
+\f3     \f0 "question\f3 _\f0 id"\f3  \f0 bigint\f3  \f0 NOT\f3  \f0 NULL\par
+\f3 );\f0\par
+ALTER\f3  \f0 TABLE\f3  \f0 "polls\f3 _\f0 choice"\par
+ADD\f3  \f0 CONSTRAINT\f3  \f0 "polls\f3 _\f0 choice\f3 _\f0 question\f3 _\f0 id\f3 _\f0 c5b4b260\f3 _\f0 fk\f3 _\f0 polls\f3 _\f0 question\f3 _\f0 id"\par
+FOREIGN\f3  \f0 KEY\f3  (\f0 "question\f3 _\f0 id"\f3 ) \f0 REFERENCES\f3  \f0 "polls\f3 _\f0 question"\f3  (\f0 "id"\f3 )\f0\par
+DEFERRABLE\f3  \f0 INITIALLY\f3  \f0 DEFERRED\f3 ;\f0\par
+CREATE\f3  \f0 INDEX\f3  \f0 "polls\f3 _\f0 choice\f3 _\f0 question\f3 _\f0 id\f3 _\f0 c5b4b260"\f3  \f0 ON\f3  \f0 "polls\f3 _\f0 choice"\f3  (\f0 "question\f3 _\f0 id"\f3 );\f0\par
+COMMIT\f3 ;\f0\par
+```\par
+\par
+**Catatan\f3  \f0 penting\f3 :\f0 **\par
+\par
+*\f3  \f0 Output\f3  \f0 bisa\f3  \f0 berbeda\f3  \f0 tergantung\f3  \f0 database\f3  \f0 yang\f3  \f0 kamu\f3  \f0 gunakan\f3 .\f0\par
+*\f3  \f0 Nama\f3  \f0 tabel\f3  \f0 dibuat\f3  \f0 otomatis\f3  \f0 dari\f3  \f0 nama\f3  \f0 aplikasi\f3  + \f0 nama\f3  \f0 model\f3  (\f0 `polls\f3 _\f0 question`\f3 , \f0 `polls\f3 _\f0 choice`\f3 ).\f0\par
+*\f3  \f0 Kunci\f3  \f0 utama\f3  (\f0 `id`\f3 ) \f0 ditambahkan\f3  \f0 otomatis\f3 .\f0\par
+*\f3  \f0 Django\f3  \f0 menambahkan\f3  \f0 sufiks\f3  \f0 `\f3 _\f0 id`\f3  \f0 pada\f3  \f0 kolom\f3  \f0 kunci\f3  \f0 asing\f3  (\f0 `ForeignKey`\f3 ).\f0\par
+*\f3  \f0 Perintah\f3  \f0 `sqlmigrate`\f3  \f0 **tidak\f3  \f0 benar\f3 -\f0 benar\f3  \f0 menjalankan**\f3  \f0 SQL\f3  \f2\emdash\f3  \f0 hanya\f3  \f0 menampilkannya\f3 .\f0\par
+*\f3  \f0 Gunakan\f3  \f0 `python\f3  \f0 manage\f3 .\f0 py\f3  \f0 check`\f3  \f0 untuk\f3  \f0 memeriksa\f3  \f0 masalah\f3  \f0 tanpa\f3  \f0 menyentuh\f3  \f0 basis\f3  \f0 data\f3 .\f0\par
+\par
+Selanjutnya\f3 , \f0 jalankan\f3  \f0 perintah\f3  \f0 berikut\f3  \f0 untuk\f3  \f0 benar\f3 -\f0 benar\f3  \f0 membuat\f3  \f0 tabel\f3 :\f0\par
+\par
+```bash\par
+$\f3  \f0 python\f3  \f0 manage\f3 .\f0 py\f3  \f0 migrate\par
+```\par
+\par
+Kamu\f3  \f0 akan\f3  \f0 melihat\f3 :\f0\par
+\par
+```\par
+Operations\f3  \f0 to\f3  \f0 perform\f3 :\f0\par
+\f3   \f0 Apply\f3  \f0 all\f3  \f0 migrations\f3 : \f0 admin\f3 , \f0 auth\f3 , \f0 contenttypes\f3 , \f0 polls\f3 , \f0 sessions\par
+Running\f3  \f0 migrations\f3 :\f0\par
+\f3   \f0 Applying\f3  \f0 polls\f3 .\f0 0001\f3 _\f0 initial\f3 ... \f0 OK\par
+```\par
+\par
+Perintah\f3  \f0 `migrate`\f3  \f0 menjalankan\f3  \f0 semua\f3  \f0 *migrations*\f3  \f0 yang\f3  \f0 belum\f3  \f0 diterapkan\f3  \f0 dan\f3  \f0 menyinkronkan\f3  \f0 model\f3  \f0 dengan\f3  \f0 *schema*\f3  \f0 basis\f3  \f0 data\f3 .\f0\par
+\par
+Ini\f3  \f0 memungkinkanmu\f3  \f0 mengubah\f3  \f0 model\f3  \f0 tanpa\f3  \f0 kehilangan\f3  \f0 data\f3  \f2\emdash\f3  \f0 *migrations*\f3  \f0 sangat\f3  \f0 kuat\f3  \f0 dan\f3  \f0 mendukung\f3  \f0 pembaruan\f3  \f0 *live\f3  \f0 database*\f3  \f0 tanpa\f3  \f0 harus\f3  \f0 menghapus\f3  \f0 tabel\f3  \f0 lama\f3 .\f0\par
+\par
+**Tiga\f3  \f0 langkah\f3  \f0 membuat\f3  \f0 perubahan\f3  \f0 model\f3 :\f0 **\par
+\par
+1\f3 . \f0 Ubah\f3  \f0 `models\f3 .\f0 py`\f3 .\f0\par
+2\f3 . \f0 Jalankan\f3  \f0 `python\f3  \f0 manage\f3 .\f0 py\f3  \f0 makemigrations`\f3 .\f0\par
+3\f3 . \f0 Jalankan\f3  \f0 `python\f3  \f0 manage\f3 .\f0 py\f3  \f0 migrate`\f3 .\f0\par
+\par
+\f3 ---\f0\par
+\par
+\f3 ### \f0 2\f3 .\f0 4\f3 .\f0 4\f3  \f0 Bermain\f3  \f0 dengan\f3  \f0 API\par
+\par
+Sekarang\f3  \f0 mari\f3  \f0 masuk\f3  \f0 ke\f3  \f0 *Python\f3  \f0 shell*\f3  \f0 interaktif\f3  \f0 untuk\f3  \f0 mencoba\f3  \f0 API\f3  \f0 Django\f3 :\f0\par
+\par
+```bash\par
+$\f3  \f0 python\f3  \f0 manage\f3 .\f0 py\f3  \f0 shell\par
+```\par
+\par
+Gunakan\f3  \f0 ini\f3  (\f0 bukan\f3  \f0 `python`\f3 ) \f0 karena\f3  \f0 `manage\f3 .\f0 py`\f3  \f0 mengatur\f3  \f0 variabel\f3  \f0 lingkungan\f3  \f0 Django\f3 .\f0\par
+\par
+Coba\f3  \f0 langkah\f3 -\f0 langkah\f3  \f0 berikut\f3 :\f0\par
+\par
+```python\par
+\f3 >>> \f0 from\f3  \f0 polls\f3 .\f0 models\f3  \f0 import\f3  \f0 Question\par
+\f3 >>> \f0 Question\f3 .\f0 objects\f3 .\f0 all\f3 ()\f0\par
+\f3 <\f0 QuerySet\f3  []>\f0\par
+\par
+\f3 >>> \f0 from\f3  \f0 django\f3 .\f0 utils\f3  \f0 import\f3  \f0 timezone\par
+\f3 >>> \f0 q\f3  = \f0 Question\f3 (\f0 question\f3 _\f0 text\f3 =\f0 "What's\f3  \f0 new\f3 ?\f0 "\f3 , \f0 pub\f3 _\f0 date\f3 =\f0 timezone\f3 .\f0 now\f3 ())\f0\par
+\f3 >>> \f0 q\f3 .\f0 save\f3 ()\f0\par
+\f3 >>> \f0 q\f3 .\f0 id\par
+1\par
+\f3 >>> \f0 q\f3 .\f0 question\f3 _\f0 text\par
+"What's\f3  \f0 new\f3 ?\f0 "\par
+\f3 >>> \f0 q\f3 .\f0 pub\f3 _\f0 date\par
+datetime\f3 .\f0 datetime\f3 (\f0 2025\f3 , \f0 11\f3 , \f0 1\f3 , \f0 10\f3 , \f0 0\f3 , \f0 0\f3 , \f0 tzinfo\f3 =\f0 datetime\f3 .\f0 timezone\f3 .\f0 utc\f3 )\f0\par
+```\par
+\par
+Untuk\f3  \f0 membuat\f3  \f0 tampilan\f3  \f0 objek\f3  \f0 lebih\f3  \f0 informatif\f3 , \f0 tambahkan\f3  \f0 metode\f3  \f0 `\f3 __\f0 str\f3 __()\f0 `\f3  \f0 ke\f3  \f0 model\f3 :\f0\par
+\par
+```python\par
+class\f3  \f0 Question\f3 (\f0 models\f3 .\f0 Model\f3 ):\f0\par
+\f3     # ...\f0\par
+\f3     \f0 def\f3  __\f0 str\f3 __(\f0 self\f3 ):\f0\par
+\f3         \f0 return\f3  \f0 self\f3 .\f0 question\f3 _\f0 text\par
+\par
+class\f3  \f0 Choice\f3 (\f0 models\f3 .\f0 Model\f3 ):\f0\par
+\f3     # ...\f0\par
+\f3     \f0 def\f3  __\f0 str\f3 __(\f0 self\f3 ):\f0\par
+\f3         \f0 return\f3  \f0 self\f3 .\f0 choice\f3 _\f0 text\par
+```\par
+\par
+Tambahkan\f3  \f0 juga\f3  \f0 metode\f3  \f0 khusus\f3 :\f0\par
+\par
+```python\par
+import\f3  \f0 datetime\par
+from\f3  \f0 django\f3 .\f0 utils\f3  \f0 import\f3  \f0 timezone\par
+\par
+class\f3  \f0 Question\f3 (\f0 models\f3 .\f0 Model\f3 ):\f0\par
+\f3     # ...\f0\par
+\f3     \f0 def\f3  \f0 was\f3 _\f0 published\f3 _\f0 recently\f3 (\f0 self\f3 ):\f0\par
+\f3         \f0 return\f3  \f0 self\f3 .\f0 pub\f3 _\f0 date\f3  >= \f0 timezone\f3 .\f0 now\f3 () - \f0 datetime\f3 .\f0 timedelta\f3 (\f0 days\f3 =\f0 1\f3 )\f0\par
+```\par
+\par
+Setelah\f3  \f0 itu\f3 , \f0 kamu\f3  \f0 dapat\f3 :\f0\par
+\par
+*\f3  \f0 Membuat\f3  \f0 *choice*\f3  \f0 untuk\f3  \f0 sebuah\f3  \f0 *question*\f3  \f0 dengan\f3 :\f0\par
+\par
+\f3   \f0 ```python\par
+\f3   \f0 q\f3 .\f0 choice\f3 _\f0 set\f3 .\f0 create\f3 (\f0 choice\f3 _\f0 text\f3 =\f0 "Not\f3  \f0 much"\f3 , \f0 votes\f3 =\f0 0\f3 )\f0\par
+\f3   \f0 ```\par
+*\f3  \f0 Mengakses\f3  \f0 relasi\f3  \f0 dua\f3  \f0 arah\f3 :\f0\par
+\par
+\f3   \f0 ```python\par
+\f3   \f0 q\f3 .\f0 choice\f3 _\f0 set\f3 .\f0 all\f3 ()\f0\par
+\f3   \f0 ```\par
+\par
+\f3   \f0 atau\par
+\par
+\f3   \f0 ```python\par
+\f3   \f0 c\f3 .\f0 question\par
+\f3   \f0 ```\par
+\par
+\f3 ---\f0\par
+\par
+\f3 ### \f0 2\f3 .\f0 4\f3 .\f0 5\f3  \f0 Mengenal\f3  \f0 Django\f3  \f0 Admin\par
+\par
+\'ae\f3  \f0 **Filosofi**\par
+Membuat\f3  \f0 situs\f3  \f0 admin\f3  \f0 untuk\f3  \f0 menambah\f3 , \f0 mengubah\f3 , \f0 dan\f3  \f0 menghapus\f3  \f0 konten\f3  \f0 bisa\f3  \f0 sangat\f3  \f0 membosankan\f3  \f2\emdash\f3  \f0 maka\f3  \f0 Django\f3  \f0 **mengotomatiskannya\f3  \f0 sepenuhnya**\f3 .\f0\par
+\par
+Untuk\f3  \f0 memulai\f3 , \f0 buat\f3  \f0 pengguna\f3  \f0 *superuser*\f3 :\f0\par
+\par
+```bash\par
+$\f3  \f0 python\f3  \f0 manage\f3 .\f0 py\f3  \f0 createsuperuser\par
+```\par
+\par
+Masukkan\f3 :\f0\par
+\par
+```\par
+Username\f3 : \f0 admin\par
+Email\f3  \f0 address\f3 : \f0 admin@example\f3 .\f0 com\par
+Password\f3 : \f0 ********\par
+Password\f3  (\f0 again\f3 ): \f0 ********\par
+Superuser\f3  \f0 created\f3  \f0 successfully\f3 .\f0\par
+```\par
+\par
+Jalankan\f3  \f0 server\f3 :\f0\par
+\par
+```bash\par
+$\f3  \f0 python\f3  \f0 manage\f3 .\f0 py\f3  \f0 runserver\par
+```\par
+\par
+Buka\f3 :\f0\par
+\f4\u-10179?\u-9143?\f3  [{\f0{\field{\*\fldinst{HYPERLINK http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) }}{\fldrslt{http\f3 ://\f0 127\f3 .\f0 0\f3 .\f0 0\f3 .\f0 1\f3 :\f0 8000\f3 /\f0 admin\f3 /](\f0 http\f3 ://\f0 127\f3 .\f0 0\f3 .\f0 0\f3 .\f0 1\f3 :\f0 8000\f3 /\f0 admin\f3 /)\ul0\cf0}}}}\f0\fs22\par
+\par
+Masuk\f3  \f0 menggunakan\f3  \f0 akun\f3  \f0 superuser\f3 .\f0\par
+Kamu\f3  \f0 akan\f3  \f0 melihat\f3  \f0 halaman\f3  \f0 admin\f3  \f0 Django\f3  \f0 dengan\f3  \f0 beberapa\f3  \f0 bagian\f3  \f0 bawaan\f3  \f0 seperti\f3  \f0 **Groups**\f3  \f0 dan\f3  \f0 **Users**\f3  (\f0 dari\f3  \f0 `django\f3 .\f0 contrib\f3 .\f0 auth`\f3 ).\f0\par
+\par
+Namun\f3 , \f0 aplikasi\f3  \f0 **polls**\f3  \f0 belum\f3  \f0 muncul\f3  \f2\emdash\f3  \f0 kita\f3  \f0 perlu\f3  \f0 mendaftarkan\f3  \f0 model\f3  \f0 `Question`\f3  \f0 di\f3  \f0 admin\f3 .\f0\par
+\par
+Edit\f3  \f0 `polls\f3 /\f0 admin\f3 .\f0 py`\f3 :\f0\par
+\par
+```python\par
+from\f3  \f0 django\f3 .\f0 contrib\f3  \f0 import\f3  \f0 admin\par
+from\f3  .\f0 models\f3  \f0 import\f3  \f0 Question\par
+\par
+admin\f3 .\f0 site\f3 .\f0 register\f3 (\f0 Question\f3 )\f0\par
+```\par
+\par
+Sekarang\f3 , \f0 buka\f3  \f0 kembali\f3  \f0 halaman\f3  \f0 admin\f3  \f2\emdash\f3  \f0 kamu\f3  \f0 akan\f3  \f0 melihat\f3  \f0 bagian\f3  \f0 **Questions**\f3 .\f0\par
+\par
+Formulir\f3  \f0 di\f3  \f0 halaman\f3  \f0 edit\f3  \f0 Question\f3  \f0 dibuat\f3  \f0 otomatis\f3  \f0 dari\f3  \f0 model\f3 .\f0\par
+Field\f3  \f0 `DateTimeField`\f3  \f0 dan\f3  \f0 `CharField`\f3  \f0 ditampilkan\f3  \f0 dengan\f3  \f0 widget\f3  \f0 HTML\f3  \f0 yang\f3  \f0 sesuai\f3 .\f0\par
+Kamu\f3  \f0 juga\f3  \f0 mendapat\f3  \f0 shortcut\f3  \f0\ldblquote Today\rdblquote\f3  \f0 dan\f3  \f0\ldblquote Now\rdblquote\f3  \f0 untuk\f3  \f0 input\f3  \f0 tanggal\f3 /\f0 waktu\f3 .\f0\par
+\par
+Di\f3  \f0 bagian\f3  \f0 bawah\f3 , \f0 ada\f3  \f0 tombol\f3 :\f0\par
+\par
+*\f3  \f0 **Save**\par
+*\f3  \f0 **Save\f3  \f0 and\f3  \f0 continue\f3  \f0 editing**\par
+*\f3  \f0 **Save\f3  \f0 and\f3  \f0 add\f3  \f0 another**\par
+*\f3  \f0 **Delete**\par
+\par
+Jika\f3  \f0 waktu\f3  \f0 publikasi\f3  \f0 tidak\f3  \f0 sesuai\f3 , \f0 pastikan\f3  \f0 `TIME\f3 _\f0 ZONE`\f3  \f0 di\f3  \f0 `settings\f3 .\f0 py`\f3  \f0 sudah\f3  \f0 benar\f3 .\f0\par
+\par
+Klik\f3  \f0 **History**\f3  \f0 di\f3  \f0 pojok\f3  \f0 kanan\f3  \f0 atas\f3 , \f0 dan\f3  \f0 kamu\f3  \f0 akan\f3  \f0 melihat\f3  \f0 semua\f3  \f0 perubahan\f3  \f0 yang\f3  \f0 dilakukan\f3  \f0 lewat\f3  \f0 admin\f3 , \f0 lengkap\f3  \f0 dengan\f3  \f0 waktu\f3  \f0 dan\f3  \f0 nama\f3  \f0 pengguna\f3 .\f0\par
+\par
+\f3 ---\f0\lang9\par
+}
+ 
